@@ -1,0 +1,21 @@
+server:
+  port: 8003
+
+spring:
+  profiles: prod
+
+  datasource:
+    url: jdbc:mysql://prod-db-server:3306/dlp_auth_prod?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: prod_user
+    password: prod_password
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+
+logging:
+  level:
+    root: WARN
+    org.springframework.security: WARN
+    com.yourapp: INFO

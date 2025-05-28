@@ -1,0 +1,21 @@
+server:
+  port: 8002
+
+spring:
+  profiles: staging
+
+  datasource:
+    url: jdbc:mysql://staging-db-server:3306/dlp_auth_stage?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: staging_user
+    password: staging_password
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: INFO
+    com.yourapp: DEBUG
