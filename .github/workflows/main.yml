@@ -29,6 +29,11 @@ jobs:
           name: dlp-auth-artifact
           path: dlp-auth/target/*.jar
 
+      - name: 'Azure Login'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: Deploy to Azure Web App (Staging Slot)
         uses: azure/webapps-deploy@v3
         with:
