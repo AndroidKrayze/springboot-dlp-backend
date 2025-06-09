@@ -19,6 +19,15 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
+
+      - name: Parse Azure Credentials
+        run: |
+          echo "AZURE_CLIENT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientId)" >> $GITHUB_ENV
+          echo "AZURE_CLIENT_SECRET=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientSecret)" >> $GITHUB_ENV
+          echo "AZURE_TENANT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .tenantId)" >> $GITHUB_ENV
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
         working-directory: dlp-auth
@@ -29,7 +38,7 @@ jobs:
           name: dlp-auth-artifact
           path: dlp-auth/target/*.jar
 
-      - name: 'Azure Login'
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
