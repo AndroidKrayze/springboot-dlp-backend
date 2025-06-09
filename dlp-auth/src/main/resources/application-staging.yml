@@ -4,15 +4,33 @@ server:
 spring:
   profiles: staging
 
-  datasource:
-    url: jdbc:mysql://staging-db-server:3306/dlp_auth_stage?useSSL=false&useUnicode=yes&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
-    username: staging_user
-    password: staging_password
+  security:
+    oauth2:
+      client:
+        registration:
+          azure:
+            client-id: ${AZURE_CLIENT_ID}
+            client-secret: ${AZURE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+              - offline_access
+              - https://graph.microsoft.com/User.Read
+              - https://graph.microsoft.com/Mail.Read
+              - https://graph.microsoft.com/Mail.ReadWrite
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8000/login/oauth2/code/azure
+            client-name: Azure
+        provider:
+          azure:
+            issuer-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/v2.0
+            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
+            user-info-uri: https://graph.microsoft.com/oidc/userinfo
 
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
+  jackson:
+    serialization:
+      INDENT_OUTPUT: true
 
 logging:
   level:
