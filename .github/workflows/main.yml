@@ -1,14 +1,14 @@
-name: Build and Deploy Spring Boot App to Azure Web App
+name: CI - Build and Test Only
 
 on:
+  pull_request:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -19,20 +19,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build with Maven
-        run: mvn clean install -DskipTests
+      - name: Build and Test with Maven
+        run: mvn clean verify
         working-directory: dlp-auth
-
-      - name: Upload Artifact for Deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: dlp-auth-artifact
-          path: dlp-auth/target/*.jar
-
-      - name: Deploy to Azure Web App (Staging Slot)
-        uses: azure/webapps-deploy@v3
-        with:
-          app-name: dlp-auth
-          slot-name: staging
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: dlp-auth/target/*.jar
