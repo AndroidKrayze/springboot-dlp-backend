@@ -16,7 +16,7 @@ import com.dlpauth.model.DlpauthOutputResult;
 @RequestMapping("/auth")
 public class AuthController {
 
-	@GetMapping("userInfo")
+	@GetMapping("/userInfo")
 	public DlpauthOutputResult getCurrentUser(@AuthenticationPrincipal OidcUser oidcUser) {
 	    DlpauthOutputResult output = new DlpauthOutputResult();
 
