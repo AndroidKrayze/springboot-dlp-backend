@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -32,11 +33,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
     steps:
       - name: Download JAR from build job
         uses: actions/download-artifact@v4
         with:
           name: packaged-jar
+
+      - name: Rename downloaded JAR to app.jar
+        run: mv *.jar app.jar
 
       - name: Deploy to Azure Web App (staging slot)
         uses: azure/webapps-deploy@v3
@@ -44,4 +49,4 @@ jobs:
           app-name: dlp-auth
           slot-name: staging
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: '*.jar'
+          package: app.jar
