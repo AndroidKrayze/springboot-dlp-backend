@@ -1,52 +1,58 @@
-name: Build and Deploy Spring Boot App to Azure Web App - Staging
+# .github/workflows/deploy-spring-boot-staging.yml
+name: Build and Deploy Spring Boot App to Azure Web App (staging)
 
 on:
   push:
-    branches:
-      - main 
+    branches: [ main ]          
+  workflow_dispatch:            
 
 jobs:
-  build-and-deploy:
+# ────────────────────────────────────────────────────────────────────────────────
+# 1) BUILD  – compile & package the app, then publish the JAR as a workflow
+#             artifact so the next job can download it.
+# ────────────────────────────────────────────────────────────────────────────────
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '17'
-          distribution: 'temurin'
-
-      - name: Install jq
-        run: sudo apt-get update && sudo apt-get install -y jq
-
-      - name: Parse Azure Credentials (Optional if using publish-profile only)
-        run: |
-          echo "AZURE_CLIENT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientId)" >> $GITHUB_ENV
-          echo "AZURE_CLIENT_SECRET=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .clientSecret)" >> $GITHUB_ENV
-          echo "AZURE_TENANT_ID=$(echo '${{ secrets.AZURE_CREDENTIALS }}' | jq -r .tenantId)" >> $GITHUB_ENV
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
-        working-directory: dlp-auth
+        working-directory: dlp-auth        
 
-      - name: Upload Artifact for Deployment
+      # Publish the JAR so we can grab it in the deploy job
+      - name: Upload packaged JAR
         uses: actions/upload-artifact@v4
         with:
-          name: dlp-auth-artifact
-          path: dlp-auth/target/*.jar
+          name: packaged-jar
+          path: dlp-auth/target/*.jar       
+# ────────────────────────────────────────────────────────────────────────────────
+# 2) DEPLOY – download the JAR and push it into the ‘staging’ slot.
+#             We use the publish-profile secret only
+# ────────────────────────────────────────────────────────────────────────────────
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-      - name: Azure Login
-        uses: azure/login@v1
+    steps:
+      - name: Download JAR from build job
+        uses: actions/download-artifact@v4
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          name: packaged-jar
 
-      - name: Deploy to Azure Web App (Staging Slot)
+      # The JAR is now in ${{ github.workspace }}
+      - name: Deploy to Azure Web App (staging slot)
         uses: azure/webapps-deploy@v3
         with:
-          app-name: dlp-auth
-          slot-name: staging
+          app-name: dlp-auth             
+          slot-name: staging            
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: dlp-auth/target/*.jar
+          package: '*.jar'               
