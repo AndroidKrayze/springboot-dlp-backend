@@ -3,17 +3,12 @@ name: Build and Deploy Spring Boot App to Azure Web App (staging)
 
 on:
   push:
-    branches: [ main ]          
-  workflow_dispatch:            
+    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
-# ────────────────────────────────────────────────────────────────────────────────
-# 1) BUILD  – compile & package the app, then publish the JAR as a workflow
-#             artifact so the next job can download it.
-# ────────────────────────────────────────────────────────────────────────────────
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -26,33 +21,27 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install -DskipTests
-        working-directory: dlp-auth        
+        working-directory: dlp-auth
 
-      # Publish the JAR so we can grab it in the deploy job
       - name: Upload packaged JAR
         uses: actions/upload-artifact@v4
         with:
           name: packaged-jar
-          path: dlp-auth/target/*.jar       
-# ────────────────────────────────────────────────────────────────────────────────
-# 2) DEPLOY – download the JAR and push it into the ‘staging’ slot.
-#             We use the publish-profile secret only
-# ────────────────────────────────────────────────────────────────────────────────
+          path: dlp-auth/target/*.jar
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
-
     steps:
       - name: Download JAR from build job
         uses: actions/download-artifact@v4
         with:
           name: packaged-jar
 
-      # The JAR is now in ${{ github.workspace }}
       - name: Deploy to Azure Web App (staging slot)
         uses: azure/webapps-deploy@v3
         with:
-          app-name: dlp-auth             
-          slot-name: staging            
+          app-name: dlp-auth
+          slot-name: staging
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: '*.jar'               
+          package: packaged-jar/*.jar
