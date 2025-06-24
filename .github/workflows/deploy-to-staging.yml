@@ -30,7 +30,7 @@ jobs:
           name: packaged-jar
           path: dlp-auth/target/*.jar
 
-  deploy:
+   deploy:
     needs: build
     runs-on: ubuntu-latest
 
@@ -39,6 +39,10 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: packaged-jar
+          path: .
+
+      - name: Verify downloaded files
+        run: ls -l
 
       - name: Rename downloaded JAR to app.jar
         run: mv *.jar app.jar
@@ -50,3 +54,4 @@ jobs:
           slot-name: staging
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: app.jar
+
