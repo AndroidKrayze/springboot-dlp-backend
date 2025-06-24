@@ -1,6 +1,6 @@
-
 spring:
-  profiles: staging
+  profiles:
+    active: staging
 
   security:
     oauth2:
@@ -28,7 +28,7 @@ spring:
 
   jackson:
     serialization:
-      INDENT_OUTPUT: true
+      indent_output: true
 
 logging:
   level:
