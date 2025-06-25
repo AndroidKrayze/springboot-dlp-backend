@@ -53,4 +53,4 @@ jobs:
           app-name: 'dlp-auth-guard'
           slot-name: 'staging'
           package: '*.jar'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E9B9A870414407D9D4F284490C3A1AB }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
