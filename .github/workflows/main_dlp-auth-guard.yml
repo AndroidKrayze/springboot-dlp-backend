@@ -45,18 +45,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dlp-auth
-
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
       
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'dlp-auth-guard'             
-          slot-name: 'staging'                   
-          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          app-name: 'dlp-auth-guard'
+          slot-name: 'production'
           package: '*.jar'
-
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7E9B9A870414407D9D4F284490C3A1AB }}
