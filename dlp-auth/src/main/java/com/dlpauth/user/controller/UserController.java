@@ -1,9 +1,7 @@
 package com.dlpauth.user.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dlpauth.model.DlpauthOutputResult;
@@ -24,9 +22,10 @@ public class UserController {
 		return userService.getUsersFromGraphApi();
 	}
 
-	@PostMapping("/saveTenant")
-	public DlpauthOutputResult saveTenantInfo(@RequestParam String tenantId, @RequestParam String email) {
-		return userService.saveTenantInfo(tenantId, email);
-	}
+	/*
+	 * @PostMapping("/saveTenant") public DlpauthOutputResult
+	 * saveTenantInfo(@RequestParam String tenantId, @RequestParam String email) {
+	 * return userService.saveTenantInfo(tenantId, email); }
+	 */
 
 }

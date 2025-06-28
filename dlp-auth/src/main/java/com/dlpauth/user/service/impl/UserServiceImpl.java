@@ -1,6 +1,5 @@
 package com.dlpauth.user.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +21,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dlpauth.exception.ErrorDetails;
 import com.dlpauth.model.DlpauthOutputResult;
-import com.dlpauth.tenant.model.Tenant;
-import com.dlpauth.tenant.repo.TenantRepo;
 import com.dlpauth.user.service.UserService;
 
 @Service
@@ -33,8 +30,9 @@ public class UserServiceImpl<T> implements UserService {
 	private String graphUrl;
 
 
-	@Autowired
-	private TenantRepo tenantRepo;
+	/*
+	 * @Autowired private TenantRepo tenantRepo;
+	 */
 	
 	@Autowired
 	private OAuth2AuthorizedClientService authorizedClientService;
@@ -96,24 +94,21 @@ public class UserServiceImpl<T> implements UserService {
 		
 
 
-	@Override
-	public DlpauthOutputResult saveTenantInfo(String tenantId, String email) {
-
-		String subdomain = generateSubdomain(email);
-
-		Tenant tenant = new Tenant();
-		tenant.setTenantId(tenantId);
-		tenant.setAdmin_email(email);
-		tenant.setSubdomain(subdomain);
-		tenant.setRegistered_date(new Date());
-
-		tenantRepo.save(tenant);
-		return null;
-	}
-
-	public boolean isTenantRegistered(String tenantId) {
-		return tenantRepo.existsByTenantId(tenantId);
-	}
+		/*
+		 * @Override public DlpauthOutputResult saveTenantInfo(String tenantId, String
+		 * email) {
+		 * 
+		 * String subdomain = generateSubdomain(email);
+		 * 
+		 * Tenant tenant = new Tenant(); tenant.setTenantId(tenantId);
+		 * tenant.setAdmin_email(email); tenant.setSubdomain(subdomain);
+		 * tenant.setRegistered_date(new Date());
+		 * 
+		 * tenantRepo.save(tenant); return null; }
+		 * 
+		 * public boolean isTenantRegistered(String tenantId) { return
+		 * tenantRepo.existsByTenantId(tenantId); }
+		 */
 
 	private String generateSubdomain(String email) {
 		String domainPart = email.split("@")[1];

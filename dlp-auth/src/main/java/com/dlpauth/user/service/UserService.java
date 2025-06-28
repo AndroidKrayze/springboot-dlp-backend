@@ -6,6 +6,6 @@ public interface UserService {
 
 	public DlpauthOutputResult getUsersFromGraphApi();
 	
-	public DlpauthOutputResult saveTenantInfo(String tenantId, String email);
+	//public DlpauthOutputResult saveTenantInfo(String tenantId, String email);
 	
 }
