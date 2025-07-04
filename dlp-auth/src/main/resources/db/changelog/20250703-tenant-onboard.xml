@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog.xsd">
+
+    <changeSet id="20250703-tenant-onboard" author="copilot">
+        <createTable tableName="tenant_onboard" schemaName="dlp">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="subdomain" type="VARCHAR(255)"/>
+            <column name="tenant_id" type="VARCHAR(255)"/>
+            <column name="access_token" type="TEXT"/>
+            <column name="refresh_token" type="TEXT"/>
+            <column name="org_name" type="TEXT"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

@@ -8,4 +8,5 @@ public interface UserService {
 	
 	//public DlpauthOutputResult saveTenantInfo(String tenantId, String email);
 	
+	DlpauthOutputResult onboardTenant(String tenantId, String accessToken, String refreshToken, String subdomain, String orgName);
 }

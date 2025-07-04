@@ -1,6 +1,7 @@
 package com.dlpauth.user.service.impl;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.dlpauth.exception.ErrorDetails;
 import com.dlpauth.model.DlpauthOutputResult;
+import com.dlpauth.user.model.TenantOnboard;
+import com.dlpauth.user.repository.TenantOnboardRepository;
 import com.dlpauth.user.service.UserService;
 
 @Service
@@ -36,6 +39,9 @@ public class UserServiceImpl<T> implements UserService {
 	
 	@Autowired
 	private OAuth2AuthorizedClientService authorizedClientService;
+
+    @Autowired
+    private TenantOnboardRepository tenantOnboardRepository;
 
 	@Override
 	public DlpauthOutputResult getUsersFromGraphApi() {
@@ -93,6 +99,26 @@ public class UserServiceImpl<T> implements UserService {
 		}
 		
 
+		@Override
+		public DlpauthOutputResult onboardTenant(String tenantId, String accessToken, String refreshToken, String subdomain, String orgName) {
+	        DlpauthOutputResult output = new DlpauthOutputResult();
+	        try {
+	            TenantOnboard tenant = new TenantOnboard();
+	            tenant.setId(UUID.randomUUID());
+	            tenant.setTenantId(tenantId);
+	            tenant.setAccessToken(accessToken);
+	            tenant.setRefreshToken(refreshToken);
+	            tenant.setSubdomain(subdomain);
+	            tenant.setOrgName(orgName);
+	            tenantOnboardRepository.save(tenant);
+	            output.setStatus("Tenant onboarded successfully");
+	            output.setData(tenant);
+	        } catch (Exception ex) {
+	            output.setErrorInfo(new ErrorDetails("500", ex.getMessage()));
+	            output.setStatus("Failed to onboard tenant");
+	        }
+	        return output;
+	    }
 
 		/*
 		 * @Override public DlpauthOutputResult saveTenantInfo(String tenantId, String
