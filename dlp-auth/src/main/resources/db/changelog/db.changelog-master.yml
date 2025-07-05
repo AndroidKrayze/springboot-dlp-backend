@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/20250703-tenant-onboard.xml
+      relativeToChangelogFile: false
+
