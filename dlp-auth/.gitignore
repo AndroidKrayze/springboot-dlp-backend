@@ -1,1 +1,41 @@
 /target/
+
+# Environment variables (never commit these!)
+.env
+*.env
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Build artifacts
+*.jar
+*.war
+*.class
+/build/
+/out/
+
+# Logs
+*.log
+logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment variables file
+.env
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# Build artifacts
+*.jar
+*.class
+BOOT-INF/
+META-INF/
+temp_jar/
+javac.*.args

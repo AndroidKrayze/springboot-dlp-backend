@@ -19,11 +19,22 @@ spring:
             client-name: Azure
         provider:
           azure:
-            authorization-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:00fbdbac-bf96-4ddc-8685-01819c5c546d}/oauth2/v2.0/authorize
-            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:00fbdbac-bf96-4ddc-8685-01819c5c546d}/oauth2/v2.0/token
+            issuer-uri: https://login.microsoftonline.com/00fbdbac-bf96-4ddc-8685-01819c5c546d/v2.0
+            token-uri: https://login.microsoftonline.com/00fbdbac-bf96-4ddc-8685-01819c5c546d/oauth2/v2.0/token
             user-info-uri: https://graph.microsoft.com/oidc/userinfo
-            jwk-set-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID:00fbdbac-bf96-4ddc-8685-01819c5c546d}/discovery/v2.0/keys
-            user-name-attribute: sub
+
+  jackson:
+    serialization:
+      indent_output: true
+
+logging:
+  level:
+    root: INFO
+    org.springframework.security: DEBUG
+    com.dlpauth: DEBUG
+
+server:
+  port: 8000
 
   jackson:
     serialization:
@@ -33,7 +44,10 @@ logging:
   level:
     root: INFO
     org.springframework.security: INFO
-    com.dlpauth: DEBUG
+    com.yourapp: DEBUG
 
-server:
-  port: 8000
+# Proxy settings for JVM
+proxy:
+  https:
+    host: cosmos-vip.intra.renault.fr
+    port: 3128
